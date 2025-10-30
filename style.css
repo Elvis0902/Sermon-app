@@ -1,0 +1,100 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #121212;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+#app {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  flex: 1;
+  overflow: hidden;
+}
+.sidebar {
+  background: #000;
+  padding: 1rem;
+}
+.sidebar h2 {
+  font-size: 24px;
+  margin-bottom: 1rem;
+}
+.playlist-nav li {
+  list-style: none;
+  margin: 0.5rem 0;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.playlist-nav li:hover {
+  color: #1db954;
+}
+.main {
+  padding: 1rem;
+  overflow-y: auto;
+}
+.track-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.track {
+  background: #181818;
+  border-radius: 8px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.track:hover {
+  background: #282828;
+}
+.track img {
+  width: 100%;
+  border-radius: 8px;
+}
+.track h4 {
+  margin-top: 0.5rem;
+  font-size: 16px;
+}
+.track p {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.player {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: #000;
+  border-top: 1px solid #333;
+  gap: 1rem;
+}
+.player img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+}
+audio {
+  flex-grow: 1;
+}
+@media (max-width: 768px) {
+  #app {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none;
+  }
+  .player {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  audio {
+    width: 100%;
+  }
+}

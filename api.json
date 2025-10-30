@@ -1,0 +1,248 @@
+{
+  "id": "root",
+  "name": "Music Platform API Collection",
+  "type": "folder",
+  "children": [
+    {
+      "id": "auth-folder",
+      "type": "folder",
+      "name": "Authentication",
+      "children": [
+        {
+          "id": "register",
+          "type": "api",
+          "name": "Register User",
+          "method": "POST",
+          "url": "http://localhost:5000/api/auth/register",
+          "headers": [
+            {"key": "Content-Type", "value": "application/json"}
+          ],
+          "query": [],
+          "cookies": [],
+          "bodyType": "json",
+          "body": {
+            "none": "",
+            "formData": [],
+            "urlencoded": [],
+            "raw": "",
+            "json": {
+              "username": "testuser",
+              "email": "test@example.com",
+              "password": "password123"
+            },
+            "binary": null
+          }
+        },
+        {
+          "id": "login",
+          "type": "api",
+          "name": "Login User",
+          "method": "POST",
+          "url": "http://localhost:5000/api/auth/login",
+          "headers": [
+            {"key": "Content-Type", "value": "application/json"}
+          ],
+          "query": [],
+          "cookies": [],
+          "bodyType": "json",
+          "body": {
+            "none": "",
+            "formData": [],
+            "urlencoded": [],
+            "raw": "",
+            "json": {
+              "email": "test@example.com",
+              "password": "password123"
+            },
+            "binary": null
+          }
+        },
+        {
+          "id": "me",
+          "type": "api",
+          "name": "Get Current User",
+          "method": "GET",
+          "url": "http://localhost:5000/api/auth/me",
+          "headers": [
+            {"key": "Authorization", "value": "Bearer YOUR_TOKEN_HERE"}
+          ],
+          "query": [],
+          "cookies": [],
+          "bodyType": "none",
+          "body": {
+            "none": "",
+            "formData": [],
+            "urlencoded": [],
+            "raw": "",
+            "json": {},
+            "binary": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "tracks-folder",
+      "type": "folder",
+      "name": "Tracks",
+      "children": [
+        {
+          "id": "featured-tracks",
+          "type": "api",
+          "name": "Get Featured Tracks",
+          "method": "GET",
+          "url": "http://localhost:5000/api/tracks/featured",
+          "headers": [],
+          "query": [],
+          "cookies": [],
+          "bodyType": "none",
+          "body": {
+            "none": "",
+            "formData": [],
+            "urlencoded": [],
+            "raw": "",
+            "json": {},
+            "binary": null
+          }
+        },
+        {
+          "id": "recent-tracks",
+          "type": "api",
+          "name": "Get Recent Tracks",
+          "method": "GET",
+          "url": "http://localhost:5000/api/tracks/recent",
+          "headers": [],
+          "query": [],
+          "cookies": [],
+          "bodyType": "none",
+          "body": {
+            "none": "",
+            "formData": [],
+            "urlencoded": [],
+            "raw": "",
+            "json": {},
+            "binary": null
+          }
+        },
+        {
+          "id": "library-tracks",
+          "type": "api",
+          "name": "Get User Library",
+          "method": "GET",
+          "url": "http://localhost:5000/api/tracks/library",
+          "headers": [
+            {"key": "Authorization", "value": "Bearer YOUR_TOKEN_HERE"}
+          ],
+          "query": [
+            {"key": "filter", "value": "all"}
+          ],
+          "cookies": [],
+          "bodyType": "none",
+          "body": {
+            "none": "",
+            "formData": [],
+            "urlencoded": [],
+            "raw": "",
+            "json": {},
+            "binary": null
+          }
+        },
+        {
+          "id": "upload-track",
+          "type": "api",
+          "name": "Upload Track",
+          "method": "POST",
+          "url": "http://localhost:5000/api/tracks/upload",
+          "headers": [
+            {"key": "Authorization", "value": "Bearer YOUR_TOKEN_HERE"}
+          ],
+          "query": [],
+          "cookies": [],
+          "bodyType": "formData",
+          "body": {
+            "none": "",
+            "formData": [
+              {"key": "file", "value": "AUDIO_FILE"},
+              {"key": "title", "value": "Track Title"},
+              {"key": "artist", "value": "Artist Name"},
+              {"key": "album", "value": "Album Name"},
+              {"key": "genre", "value": "Genre"},
+              {"key": "type", "value": "music"},
+              {"key": "description", "value": "Track description"}
+            ],
+            "urlencoded": [],
+            "raw": "",
+            "json": {},
+            "binary": null
+          }
+        },
+        {
+          "id": "search-tracks",
+          "type": "api",
+          "name": "Search Tracks",
+          "method": "GET",
+          "url": "http://localhost:5000/api/tracks/search",
+          "headers": [],
+          "query": [
+            {"key": "q", "value": "search query"},
+            {"key": "type", "value": "music"}
+          ],
+          "cookies": [],
+          "bodyType": "none",
+          "body": {
+            "none": "",
+            "formData": [],
+            "urlencoded": [],
+            "raw": "",
+            "json": {},
+            "binary": null
+          }
+        },
+        {
+          "id": "play-track",
+          "type": "api",
+          "name": "Update Play Count",
+          "method": "POST",
+          "url": "http://localhost:5000/api/tracks/1/play",
+          "headers": [],
+          "query": [],
+          "cookies": [],
+          "bodyType": "none",
+          "body": {
+            "none": "",
+            "formData": [],
+            "urlencoded": [],
+            "raw": "",
+            "json": {},
+            "binary": null
+          }
+        }
+      ]
+    },
+    {
+      "id": "system-folder",
+      "type": "folder",
+      "name": "System",
+      "children": [
+        {
+          "id": "health-check",
+          "type": "api",
+          "name": "Health Check",
+          "method": "GET",
+          "url": "http://localhost:5000/api/health",
+          "headers": [],
+          "query": [],
+          "cookies": [],
+          "bodyType": "none",
+          "body": {
+            "none": "",
+            "formData": [],
+            "urlencoded": [],
+            "raw": "",
+            "json": {},
+            "binary": null
+          }
+        }
+      ]
+    }
+  ]
+}
