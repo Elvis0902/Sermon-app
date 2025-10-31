@@ -12,20 +12,16 @@ export const usePlayer = () => {
 
 export const PlayerProvider = ({ children }) => {
   const [currentTrack, setCurrentTrack] = useState(null)
-  const [trackList, setTrackList] = useState([]) // holds album or playlist tracks
+  const [trackList, setTrackList] = useState([])
   const [isPlaying, setIsPlaying] = useState(false)
   const [progress, setProgress] = useState(0)
   const [volume, setVolume] = useState(100)
-  const audioRef = useRef(null)
+  const audioRef = useRef(new Audio()) // only one <audio> instance
 
-  // Initialize <audio> element once
+  const audio = audioRef.current
+
+  // Track time updates and when a song ends
   useEffect(() => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio()
-    }
-
-    const audio = audioRef.current
-
     const handleTimeUpdate = () => {
       if (audio.duration) {
         setProgress((audio.currentTime / audio.duration) * 100)
@@ -47,48 +43,52 @@ export const PlayerProvider = ({ children }) => {
 
   // Sync volume
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume / 100
-    }
+    audio.volume = volume / 100
   }, [volume])
 
-  // ▶️ Play selected track
+  // 🎵 Play a selected track
   const playTrack = (track, list = []) => {
-    if (list.length) setTrackList(list)
+    try {
+      if (!track?.url) return
 
-    if (audioRef.current) {
-      audioRef.current.src = track.url
-      audioRef.current.play()
+      // Pause before switching
+      audio.pause()
+      audio.currentTime = 0
+
+      if (list.length) setTrackList(list)
       setCurrentTrack(track)
-      setIsPlaying(true)
       setProgress(0)
+
+      // Set source & play
+      audio.src = track.url
+      audio
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch((err) => console.error('Audio play error:', err))
+    } catch (error) {
+      console.error('Error playing track:', error)
     }
   }
 
   // ▶️ Resume playback
   const play = () => {
-    if (audioRef.current && currentTrack) {
-      audioRef.current.play()
-      setIsPlaying(true)
+    if (currentTrack) {
+      audio.play().then(() => setIsPlaying(true))
     }
   }
 
   // ⏸ Pause playback
   const pause = () => {
-    if (audioRef.current) {
-      audioRef.current.pause()
-      setIsPlaying(false)
-    }
+    audio.pause()
+    setIsPlaying(false)
   }
 
   // ⏹ Stop playback
   const stop = () => {
-    if (audioRef.current) {
-      audioRef.current.pause()
-      audioRef.current.currentTime = 0
-      setIsPlaying(false)
-      setProgress(0)
-    }
+    audio.pause()
+    audio.currentTime = 0
+    setIsPlaying(false)
+    setProgress(0)
   }
 
   // ⏭ Next track
