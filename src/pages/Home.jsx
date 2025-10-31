@@ -97,9 +97,11 @@ const Home = () => {
         <section key={album.id} className="mb-10">
           <h2 className="text-2xl font-bold mb-4">{album.name}</h2>
           {album.tracks.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="flex overflow-x-auto space-x-6 pb-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
               {album.tracks.map((track) => (
-                <TrackCard key={track.id} track={track} />
+                <div key={track.id} className="flex-shrink-0 w-56">
+                <TrackCard track={track} />
+                </div>
               ))}
             </div>
           ) : (
