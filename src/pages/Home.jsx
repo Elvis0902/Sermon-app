@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Play, SkipBack, SkipForward } from 'lucide-react'
+import { Play } from 'lucide-react'
 import { usePlayer } from '../context/PlayerContext'
 
 const Home = () => {
   const [albums, setAlbums] = useState([])
   const [loading, setLoading] = useState(true)
-  const { playTrack, nextTrack, prevTrack, currentTrack } = usePlayer()
+  const { playTrack } = usePlayer()
 
   const MAIN_FOLDER_ID = '17JwaFj35w_5OFRNrNjwSFDluoPLfl-AW'
   const API_KEY = 'AIzaSyCRJPm2-XAbkt8y3P-2SanAxzTWxGwjt0M'
@@ -105,26 +105,6 @@ const Home = () => {
             />
             <div className="text-center sm:text-left">
               <h2 className="text-xl sm:text-2xl font-bold">{album.name}</h2>
-              <div className="flex justify-center sm:justify-start items-center gap-3 mt-2">
-                <button
-                  onClick={prevTrack}
-                  className="p-2 bg-gray-700 rounded-full hover:bg-gray-600"
-                >
-                  <SkipBack size={18} />
-                </button>
-                <button
-                  onClick={() => playTrack(album.tracks[0])}
-                  className="p-2 bg-blue-600 rounded-full hover:bg-blue-700"
-                >
-                  <Play size={18} fill="white" />
-                </button>
-                <button
-                  onClick={nextTrack}
-                  className="p-2 bg-gray-700 rounded-full hover:bg-gray-600"
-                >
-                  <SkipForward size={18} />
-                </button>
-              </div>
             </div>
           </div>
 
