@@ -1,47 +1,43 @@
 import React, { useState, useEffect } from 'react'
-import { Play } from 'lucide-react'
+import { Play, SkipBack, SkipForward } from 'lucide-react'
 import { usePlayer } from '../context/PlayerContext'
 
 const Home = () => {
   const [albums, setAlbums] = useState([])
   const [loading, setLoading] = useState(true)
-  const { playTrack } = usePlayer()
+  const { playTrack, nextTrack, prevTrack, currentTrack } = usePlayer()
 
-  const MAIN_FOLDER_ID = '17JwaFj35w_5OFRNrNjwSFDluoPLfl-AW' // e.g., 17JwaFj35w_5OFRNrNjwSFDluoPLfl-AW
+  const MAIN_FOLDER_ID = '17JwaFj35w_5OFRNrNjwSFDluoPLfl-AW'
   const API_KEY = 'AIzaSyCRJPm2-XAbkt8y3P-2SanAxzTWxGwjt0M'
 
   useEffect(() => {
     const fetchAlbums = async () => {
       try {
-        // 1️⃣ Fetch all album folders
         const foldersUrl = `https://www.googleapis.com/drive/v3/files?q='${MAIN_FOLDER_ID}'+in+parents+and+mimeType='application/vnd.google-apps.folder'&key=${API_KEY}&fields=files(id,name)`
         const res = await fetch(foldersUrl)
         const data = await res.json()
         const albumFolders = data.files || []
 
-        // 2️⃣ For each album folder, fetch files inside
         const albumPromises = albumFolders.map(async (folder) => {
           const filesUrl = `https://www.googleapis.com/drive/v3/files?q='${folder.id}'+in+parents&key=${API_KEY}&fields=files(id,name,mimeType)`
           const filesRes = await fetch(filesUrl)
           const filesData = await filesRes.json()
           const files = filesData.files || []
 
-          // Separate image and audio files
           const imageFile = files.find((f) => f.mimeType.startsWith('image/'))
           const audioFiles = files.filter((f) => f.mimeType.startsWith('audio/'))
 
-          // Album cover image URL (or fallback)
           const albumCover = imageFile
             ? `https://www.googleapis.com/drive/v3/files/${imageFile.id}?alt=media&key=${API_KEY}`
             : 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&h=300&fit=crop'
 
-          // Build track list
-          const tracks = audioFiles.map((file) => ({
+          const tracks = audioFiles.map((file, index) => ({
             id: file.id,
             title: file.name,
             artist: folder.name,
             url: `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media&key=${API_KEY}`,
             cover: albumCover,
+            index,
           }))
 
           return {
@@ -65,12 +61,12 @@ const Home = () => {
   }, [])
 
   const TrackCard = ({ track }) => (
-    <div className="bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-colors group">
-      <div className="relative mb-4">
+    <div className="bg-gray-800 rounded-lg p-3 sm:p-4 hover:bg-gray-700 transition-colors group">
+      <div className="relative mb-3 sm:mb-4">
         <img
           src={track.cover}
           alt={track.title}
-          className="w-full h-48 object-cover rounded-lg"
+          className="w-full h-40 sm:h-48 md:h-56 object-cover rounded-lg"
         />
         <button
           onClick={() => playTrack(track)}
@@ -79,8 +75,8 @@ const Home = () => {
           <Play size={20} fill="white" />
         </button>
       </div>
-      <h3 className="font-semibold mb-1">{track.title}</h3>
-      <p className="text-gray-400 text-sm">{track.artist}</p>
+      <h3 className="font-semibold text-sm sm:text-base mb-1 truncate">{track.title}</h3>
+      <p className="text-gray-400 text-xs sm:text-sm truncate">{track.artist}</p>
     </div>
   )
 
@@ -93,30 +89,56 @@ const Home = () => {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-4xl font-bold mb-8">Albums</h1>
+    <div className="px-4 sm:px-6 md:px-8 py-6">
+      <h1 className="text-3xl sm:text-4xl font-bold mb-6 sm:mb-8 text-center sm:text-left">
+        Albums
+      </h1>
 
       {albums.map((album) => (
         <section key={album.id} className="mb-10">
           {/* Album Header */}
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-4">
             <img
               src={album.cover}
               alt={album.name}
-              className="w-20 h-20 object-cover rounded-lg shadow-md"
+              className="w-24 h-24 sm:w-20 sm:h-20 object-cover rounded-lg shadow-md"
             />
-            <h2 className="text-2xl font-bold">{album.name}</h2>
+            <div className="text-center sm:text-left">
+              <h2 className="text-xl sm:text-2xl font-bold">{album.name}</h2>
+              <div className="flex justify-center sm:justify-start items-center gap-3 mt-2">
+                <button
+                  onClick={prevTrack}
+                  className="p-2 bg-gray-700 rounded-full hover:bg-gray-600"
+                >
+                  <SkipBack size={18} />
+                </button>
+                <button
+                  onClick={() => playTrack(album.tracks[0])}
+                  className="p-2 bg-blue-600 rounded-full hover:bg-blue-700"
+                >
+                  <Play size={18} fill="white" />
+                </button>
+                <button
+                  onClick={nextTrack}
+                  className="p-2 bg-gray-700 rounded-full hover:bg-gray-600"
+                >
+                  <SkipForward size={18} />
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Tracks */}
           {album.tracks.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
               {album.tracks.map((track) => (
                 <TrackCard key={track.id} track={track} />
               ))}
             </div>
           ) : (
-            <p className="text-gray-400 italic">No tracks found in this album.</p>
+            <p className="text-gray-400 italic text-center sm:text-left">
+              No tracks found in this album.
+            </p>
           )}
         </section>
       ))}
