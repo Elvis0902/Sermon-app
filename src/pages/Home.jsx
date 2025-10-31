@@ -10,13 +10,7 @@ const Home = () => {
   const MAIN_FOLDER_ID = '17JwaFj35w_5OFRNrNjwSFDluoPLfl-AW' // The parent folder that holds all album folders
   const API_KEY = 'AIzaSyCRJPm2-XAbkt8y3P-2SanAxzTWxGwjt0M'
 
-  {/* Hero Section */}
-   <div className="mb-8"> 
-   <div className="gradient-bg rounded-2xl p-8 mb-8"> 
-    <h1 className="text-4xl font-bold mb-4">Welcome to MusicStream</h1>
-     <p className="text-xl opacity-90">Discover, upload, and stream your favorite music and podcasts</p>
-      </div> 
-      </div>
+  
 
   // Fetch all albums (folders)
   useEffect(() => {
@@ -90,6 +84,13 @@ const Home = () => {
 
   return (
     <div className="p-6">
+      {/* Hero Section */}
+      <div className="mb-8"> 
+        <div className="gradient-bg rounded-2xl p-8 mb-8"> 
+          <h1 className="text-4xl font-bold mb-4">Welcome to MusicStream</h1>
+          <p className="text-xl opacity-90">Discover, upload, and stream your favorite music and podcasts</p>
+          </div> 
+          </div>
       <h1 className="text-4xl font-bold mb-8">Albums</h1>
 
       {albums.map((album) => (
