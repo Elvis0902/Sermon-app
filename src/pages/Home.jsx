@@ -7,7 +7,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true)
   const { playTrack } = usePlayer()
 
-  const MAIN_FOLDER_ID = 'YOUR_MAIN_FOLDER_ID' // The parent folder that holds all album folders
+  const MAIN_FOLDER_ID = '17JwaFj35w_5OFRNrNjwSFDluoPLfl-AW' // The parent folder that holds all album folders
   const API_KEY = 'AIzaSyCRJPm2-XAbkt8y3P-2SanAxzTWxGwjt0M'
 
   // Fetch all albums (folders)
