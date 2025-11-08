@@ -123,35 +123,10 @@ const Player = () => {
       </div>
 
       {/* Volume + Like */}
-      <div className="hidden sm:flex items-center space-x-4 flex-1 justify-end">
-        <button className="p-2 hover:bg-gray-800 rounded-full">
-          <Heart size={18} />
-        </button>
-        <div className="flex items-center space-x-2">
-          <Volume2 size={18} />
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={volume}
-            onChange={handleVolumeChange}
-            className="w-20 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-          />
-        </div>
-      </div>
+     
 
       {/* Compact volume control for mobile */}
-      <div className="flex sm:hidden items-center space-x-2 mt-2">
-        <Volume2 size={18} />
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={volume}
-          onChange={handleVolumeChange}
-          className="w-24 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-        />
-      </div>
+      
     </div>
   )
 }
