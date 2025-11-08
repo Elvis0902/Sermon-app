@@ -8,7 +8,6 @@ import Library from './pages/Library'
 import Upload from './pages/Upload'
 import Player from './components/Player'
 import Login from './pages/Login'
-import GoogleDriveAudioList from "./pages/GoogleDriveAudioList";
 import Register from './pages/Register'
 import { AuthProvider } from './context/AuthContext'
 import { PlayerProvider } from './context/PlayerContext'
@@ -32,7 +31,6 @@ function App() {
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/album/:albumId" element={<AlbumPage />} />
-                  <Route path="/drive" element={<GoogleDriveAudioList />} />
                 </Routes>
               </main>
               <Player />
