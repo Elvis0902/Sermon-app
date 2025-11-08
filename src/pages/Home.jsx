@@ -1,49 +1,37 @@
 import React, { useState, useEffect } from 'react'
-import { Play } from 'lucide-react'
-import { usePlayer } from '../context/PlayerContext'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
   const [albums, setAlbums] = useState([])
   const [loading, setLoading] = useState(true)
-  const { playTrack } = usePlayer()
+  const navigate = useNavigate()
 
-  const MAIN_FOLDER_ID = '17JwaFj35w_5OFRNrNjwSFDluoPLfl-AW' // The parent folder that holds all album folders
+  const MAIN_FOLDER_ID = '17JwaFj35w_5OFRNrNjwSFDluoPLfl-AW'
   const API_KEY = 'AIzaSyCRJPm2-XAbkt8y3P-2SanAxzTWxGwjt0M'
 
-  
-
-  // Fetch all albums (folders)
   useEffect(() => {
     const fetchAlbums = async () => {
       try {
-        // Step 1: Get all subfolders (albums)
         const foldersUrl = `https://www.googleapis.com/drive/v3/files?q='${MAIN_FOLDER_ID}'+in+parents+and+mimeType='application/vnd.google-apps.folder'&key=${API_KEY}&fields=files(id,name)`
         const res = await fetch(foldersUrl)
         const data = await res.json()
         const albumFolders = data.files || []
 
-        // Step 2: For each folder, fetch its audio files
-        const albumPromises = albumFolders.map(async (folder) => {
-          const filesUrl = `https://www.googleapis.com/drive/v3/files?q='${folder.id}'+in+parents+and+mimeType+contains+'audio/'&key=${API_KEY}&fields=files(id,name,mimeType)`
-          const filesRes = await fetch(filesUrl)
-          const filesData = await filesRes.json()
-          const tracks = (filesData.files || []).map((file) => ({
-            id: file.id,
-            title: file.name,
-            artist: folder.name,
-            url: `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media&key=${API_KEY}`,
-            cover: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=300&h=300&fit=crop',
-          }))
+        const albumData = await Promise.all(
+          albumFolders.map(async (folder) => {
+            const coverUrl = `https://www.googleapis.com/drive/v3/files?q='${folder.id}'+in+parents+and+mimeType contains 'image/'&key=${API_KEY}&fields=files(id,name)`
+            const coverRes = await fetch(coverUrl)
+            const coverData = await coverRes.json()
+            const cover =
+              coverData.files?.[0]
+                ? `https://www.googleapis.com/drive/v3/files/${coverData.files[0].id}?alt=media&key=${API_KEY}`
+                : 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=400&fit=crop'
 
-          return {
-            id: folder.id,
-            name: folder.name,
-            tracks,
-          }
-        })
+            return { id: folder.id, name: folder.name, cover }
+          })
+        )
 
-        const resolvedAlbums = await Promise.all(albumPromises)
-        setAlbums(resolvedAlbums)
+        setAlbums(albumData)
       } catch (err) {
         console.error('Error fetching albums:', err)
       } finally {
@@ -54,63 +42,87 @@ const Home = () => {
     fetchAlbums()
   }, [])
 
-  const TrackCard = ({ track }) => (
-    <div className="bg-gray-800 rounded-lg p-4 hover:bg-gray-700 transition-colors group">
-      <div className="relative mb-4">
-        <img
-          src={track.cover}
-          alt={track.title}
-          className="w-full h-48 object-cover rounded-lg"
-        />
-        <button
-          onClick={() => playTrack(track)}
-          className="absolute bottom-2 right-2 p-3 bg-blue-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-blue-700"
-        >
-          <Play size={20} fill="white" />
-        </button>
-      </div>
-      <h3 className="font-semibold mb-1">{track.title}</h3>
-      <p className="text-gray-400 text-sm">{track.artist}</p>
-    </div>
-  )
-
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="flex items-center justify-center h-[70vh]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
       </div>
     )
   }
 
   return (
-    <div className="p-6">
+    <div className="p-4 sm:p-6 md:p-10">
       {/* Hero Section */}
-      <div className="mb-8"> 
-        <div className="gradient-bg rounded-2xl p-8 mb-8"> 
-          <h1 className="text-4xl font-bold mb-4">Welcome to MusicStream</h1>
-          <p className="text-xl opacity-90">Discover, upload, and stream your favorite music and podcasts</p>
-          </div> 
-          </div>
-      <h1 className="text-4xl font-bold mb-8">Albums</h1>
+      <section className="text-center mb-10 md:mb-14">
+        <div className="gradient-bg bg-gradient-to-r from-blue-600 to-purple-700 rounded-2xl p-6 sm:p-10 text-white shadow-lg">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3">
+            Welcome to MusicStream
+          </h1>
+          <p className="text-base sm:text-lg md:text-xl opacity-90">
+            Discover, upload, and stream your favorite music and podcasts.
+          </p>
+        </div>
+      </section>
 
-      {albums.map((album) => (
-        <section key={album.id} className="mb-10">
-          <h2 className="text-2xl font-bold mb-4">{album.name}</h2>
-          {album.tracks.length > 0 ? (
-            <div className="flex overflow-x-auto space-x-6 pb-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
-              {album.tracks.map((track) => (
-                <div key={track.id} className="flex-shrink-0 w-56">
-                <TrackCard track={track} />
-                </div>
-              ))}
+      {/* Album Section */}
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-100">Albums</h2>
+
+      {albums.length > 0 ? (
+        <div
+          className="
+            grid
+            grid-cols-2
+            sm:grid-cols-3
+            md:grid-cols-4
+            lg:grid-cols-5
+            xl:grid-cols-6
+            gap-4
+            sm:gap-6
+          "
+        >
+          {albums.map((album) => (
+            <div
+              key={album.id}
+              onClick={() => navigate(`/album/${album.id}`)}
+              className="
+                bg-gray-800 hover:bg-gray-700
+                rounded-xl p-3 sm:p-4
+                cursor-pointer transition-all
+                shadow-md hover:shadow-xl
+                transform hover:-translate-y-1
+              "
+            >
+              <img
+                src={album.cover}
+                alt={album.name}
+                className="
+                  w-full
+                  aspect-square
+                  object-cover
+                  rounded-lg
+                  mb-3
+                  shadow-sm
+                "
+              />
+              <h3
+                className="
+                  font-semibold
+                  text-base sm:text-lg
+                  text-center text-gray-100
+                  truncate
+                "
+              >
+                {album.name}
+              </h3>
             </div>
-          ) : (
-            <p className="text-gray-400 italic">No tracks found in this album.</p>
-          )}
-        </section>
-      ))}
+          ))}
+        </div>
+      ) : (
+        <p className="text-gray-400 italic text-center mt-10">
+          No albums found.
+        </p>
+      )}
     </div>
-    
   )
 }
 

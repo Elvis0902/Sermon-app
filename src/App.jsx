@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
+import AlbumPage from './pages/Albumpage'
 import Home from './pages/Home'
 import Library from './pages/Library'
 import Upload from './pages/Upload'
@@ -30,6 +31,7 @@ function App() {
                   <Route path="/upload" element={<Upload />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
+                  <Route path="/album/:albumId" element={<AlbumPage />} />
                   <Route path="/drive" element={<GoogleDriveAudioList />} />
                 </Routes>
               </main>
