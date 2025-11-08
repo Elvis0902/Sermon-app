@@ -85,26 +85,6 @@ const Player = () => {
         }}
       />
 
-      {/* Track Info */}
-      <div className="flex items-center space-x-3 flex-1 min-w-0">
-        <img
-          src={
-            currentTrack.cover ||
-            'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=100&h=100&fit=crop'
-          }
-          alt={currentTrack.title}
-          className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg object-cover"
-        />
-        <div className="truncate">
-          <h4 className="font-medium text-sm sm:text-base truncate">
-            {currentTrack.title}
-          </h4>
-          <p className="text-xs sm:text-sm text-gray-400 truncate">
-            {currentTrack.artist}
-          </p>
-        </div>
-      </div>
-
       {/* Playback Controls */}
       <div className="flex flex-col items-center space-y-2 flex-1 w-full sm:w-auto">
         <div className="flex items-center space-x-3 sm:space-x-4">
